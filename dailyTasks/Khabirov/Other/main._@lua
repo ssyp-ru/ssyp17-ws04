@@ -1,0 +1,140 @@
+local class = require 'lib/middleclass'
+local anim8 =  require'lib/anim8';
+local setHeroColor = require'setHeroColor'
+local Texture=class('Texture');
+local Obj=class('Obj');
+local Hero=class('Hero');
+local animation={}
+local button={};
+button.state_a = false;
+button.state_d = false;
+button.state_s = false;
+button.state_w = false;
+local
+CONSTANS = {};
+CONSTANS.TEXTURE = 32*2;
+CONSTANS.ANIMATION_TIME=0.2;
+CONSTANS.HERO_SPEED=100;
+
+local image = love.graphics.newImage('res/chars.png');
+
+function love.keyreleased( key )
+	if	key=='a' then
+		button.state_a=true;
+	else
+		button.state_a=false;
+	end
+	if	key=='d' then
+		button.state_d=true;
+	else
+		button.state_d=false;
+	end
+	if	key=='s' then
+		button.state_s=true;
+	else
+		button.state_s=false;
+	end
+	if	key=='w' then
+		button.state_w=true;
+	else
+		button.state_w=false;
+	end
+end
+
+function love.keypressed( key )
+	if	key=='a' then
+		button.state.a=false;
+	else
+		button.state.a=true;
+	end
+	if	key=='w' then
+		button.state.w=false;
+	else
+		button.state.w=true;
+	end
+	if	key== 'd' then
+		button.state.d=false;
+	else
+		button.state.d=true;
+	end
+	if	key=='s' then
+		button.state.s=false;
+	else
+		button.state.s=true;
+	end
+end
+
+function Hero:initialize(x, y, canMove)
+	self.x = x or CONSTANS.TEXTURE/2;
+	self.y = y or CONSTANS.TEXTURE/2;
+	setf.canMove= canMove or true; 
+end
+
+
+function Hero:draw()
+
+
+end
+
+function Hero:move(key,dt)
+	if(key=="s") then
+		local y = self.y_pole*CONSTANS.TEXTURE;
+		while(y~=(self.y_pole+1)*CONSTANS.TEXTURE) do
+			y=y+CONSTANS.HERO_SPEED*dt;
+			animation.Down(image,x,y);
+		end
+		self.y_pole=self.y_pole+1;
+	end
+end
+
+function Texture:initialize(quad, x, y)
+	self.quad=quad;
+	self.x=sx;
+	self.y=y;
+end
+
+function Obj:initialize(x, y, sprite, descriptionIsMovaible)
+	self.x=x;
+	self.y=y;
+	self.sprite=sprite;
+	self.descriptionIsMovaible=descriptionIsMovaible or false; 
+end
+
+
+function Texture:all()
+	for i=0,love.graphics.getWidth(),CONSTANS.TEXTURE do
+		for j=0,love.graphics.getWidth(),CONSTANS.TEXTURE do
+			love.graphics.draw(tiles1,self.quad,i,j);
+
+		end
+	end
+end
+
+function love.load()
+	tiles1 = love.graphics.newImage("res/tiles1.png");
+	local grave_grass = love.graphics.newQuad(0,  0, CONSTANS.TEXTURE,CONSTANS.TEXTURE, tiles1:getWidth(), tiles1:getHeight());
+	local grave_sand  = love.graphics.newQuad(0,100, CONSTANS.TEXTURE,CONSTANS.TEXTURE, tiles1:getWidth(), tiles1:getHeight());
+	local grave_grave = love.graphics.newQuad(0,200, CONSTANS.TEXTURE,CONSTANS.TEXTURE, tiles1:getWidth(), tiles1:getHeight());
+	local grave_snow  = love.graphics.newQuad(0,300, CONSTANS.TEXTURE,CONSTANS.TEXTURE, tiles1:getWidth(), tiles1:getHeight());
+	love.graphics.setBackgroundColor(210,210,210);
+	snow=Texture:new(grave_sand,10,10);
+	setHeroColor(animation,"brown");
+end
+
+function love.draw()
+	snow:all();
+	Hero:draw();
+	animation.Down :draw(image,0,0,0,1,1);
+end
+
+
+function love.update(dt)
+	Hero:update(dt);
+	if love.keyboard.isDown("escape") then
+		love.event.quit();
+	end
+end
+
+--Decoration = class("Decoration", Obj);
+--Задачи: массивы, двумерные массивы;
+--Инкапсуляция?
